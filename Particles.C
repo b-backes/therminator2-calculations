@@ -47,10 +47,10 @@ void Particles::Loop()
 
    Float_t limit_bins[] = {0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 
    0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1., 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4,
-   1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.7, 2.9,
+   1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2., 2.05, 2.1, 2.2, 2.3, 2.4, 2.5, 2.7, 2.9,
    3.2, 3.5, 3.8, 4.3, 4.7, 5.0};
 
-   Int_t n_bins = 46;
+   Int_t n_bins = 50;
    
    TH1D *HistPtPiPlusCase1 = new TH1D("HistPtPiPlusCase1", "", n_bins, limit_bins);     // Pi+ with |eta| < 1
    TH1D *HistPtPiMinusCase1 = new TH1D("HistPtPiMinusCase1", "", n_bins, limit_bins);   // Pi- with |eta| < 1
@@ -64,6 +64,8 @@ void Particles::Loop()
    // Declaration of variables
 
    Float_t pt, pseudorapidity;
+   Int_t CountsKaPlus = 0, CountsKaMinus = 0, CountsPiPlus = 0, CountsPiMinus = 0;
+   Float_t RatioPositive, RatioNegative;
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -91,6 +93,7 @@ void Particles::Loop()
                 if (abs(pseudorapidity) < 0.5){
                     HistPtPiPlusCase2->Fill(pt);
                 }
+                CountsPiPlus++;
                 break;
             case 321:
                 if (abs(pseudorapidity) < 1){
@@ -99,6 +102,7 @@ void Particles::Loop()
                 if (abs(pseudorapidity) < 0.5){
                     HistPtKaPlusCase2->Fill(pt);
                 }
+                CountsKaPlus++;
                 break;
             case -211:
                 if (abs(pseudorapidity) < 1){
@@ -107,6 +111,7 @@ void Particles::Loop()
                 if (abs(pseudorapidity) < 0.5){
                     HistPtPiMinusCase2->Fill(pt);
                 }
+                CountsPiMinus++;
                 break;
             case -321:
                 if (abs(pseudorapidity) < 1){
@@ -115,11 +120,21 @@ void Particles::Loop()
                 if (abs(pseudorapidity) < 0.5){
                     HistPtKaMinusCase2->Fill(pt);
                 }
+                CountsKaMinus++;
                 break;
         }
     }
 
+    RatioPositive = float(CountsKaPlus)/float(CountsPiPlus);
+    RatioNegative = float(CountsKaMinus)/float(CountsPiMinus);
+
     std::cout << "Histograms for pt are filled!" << endl;
+    std::cout << "K+ = " << CountsKaPlus << "counts" << endl;
+    std::cout << "K- = " << CountsKaMinus << "counts" << endl;
+    std::cout << "Pi+ = " << CountsPiPlus << "counts" << endl;
+    std::cout << "Pi- = " << CountsPiMinus << "counts" << endl;
+    std::cout << "The K+/Pi+ ratio is " << RatioPositive << endl;
+    std::cout << "The K-/Pi- ratio is " << RatioNegative << endl;
 
     HistPtPiPlusCase1->Write();
     HistPtPiMinusCase1->Write();
