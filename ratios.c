@@ -15,13 +15,17 @@ int main(void){
         TotalCountsPiMinus += CountsPiMinus[i];
     }
 
-    double RatioPositive, RatioNegative;
+    double RatioPositive, RatioNegative, RatioKaons, RatioPions;
 
     RatioPositive = (double)TotalCountsKPlus/(double)TotalCountsPiPlus;
     RatioNegative = (double)TotalCountsKMinus/(double)TotalCountsPiMinus;
+    RatioKaons = (double)TotalCountsKPlus/(double)TotalCountsKMinus;
+    RatioPions = (double)TotalCountsPiPlus/(double)TotalCountsPiMinus;
 
     printf("The K+/Pi+ ratio is %lf \n", RatioPositive);
     printf("The K-/Pi- ratio is %lf \n", RatioNegative);
+    printf("The K+/K- ratio is %lf \n", RatioKaons);
+    printf("The Pi+/Pi- ratio is %lf \n", RatioPions);
     
     fclose(MyFile);
 
