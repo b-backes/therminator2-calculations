@@ -43,6 +43,7 @@ void Particles::Loop()
    MyFile = fopen("counts.dat","a");
 
    Int_t CountsKaPlus = 0, CountsKaMinus = 0, CountsPiPlus = 0, CountsPiMinus = 0;
+   Long64_t pt, pseudorapidity;
 
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -53,21 +54,31 @@ void Particles::Loop()
    }
 
     for(Int_t i = 0; i < nentries; i++){
-        fChain->GetEntry(i);    // Here we are getting the i-th entry from the treel.
+        fChain->GetEntry(i);    // Here we are getting the i-th entry from the tree.
+        pt = sqrt(particle_px*particle_px + particle_py*particle_py);    // And calculating pt                                               // For each one of them.
+        pseudorapidity = asinh(particle_pz/pt);     // Calculates pseudorapidity
 
         switch (particle_pid) {
             case 211:
-                CountsPiPlus++;
-                break;
+                if(abs(pseudorapidity) < 1 && pt > 0.2){
+                    CountsPiPlus++;
+                    break;
+                }
             case 321:
-                CountsKaPlus++;
-                break;
+                if(abs(pseudorapidity) < 1 && pt > 0.2){
+                    CountsKaPlus++;
+                    break;
+                }
             case -211:
-                CountsPiMinus++;
-                break;
+                if(abs(pseudorapidity) < 1 && pt > 0.2){
+                    CountsPiMinus++;
+                    break;
+                }
             case -321:
-                CountsKaMinus++;
-                break;
+                if(abs(pseudorapidity) < 1 && pt > 0.2){
+                    CountsKaMinus++;
+                    break;
+                }
         }
     }
 
